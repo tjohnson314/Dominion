@@ -1,0 +1,30 @@
+Card list
+Province,Base,Victory,8,8,6,1
+Duchy,Base,Victory,8,5,3,1
+Estate,Base,Victory,8,2,1,1
+Curse,Base,Victory,10,0,-1,1
+Gold,Base,Treasure,30,6,3,1
+Silver,Base,Treasure,40,3,2,1
+Copper,Base,Treasure,60,0,1,1
+Village,Base,Action,10,3,PlusCards,1,PlusActions,2
+Smithy,Base,Action,10,4,PlusCards,3
+Market,Base,Action,10,5,PlusCards,1,PlusActions,1,PlusBuys,1,PlusMoney,1
+Woodcutter,Base,Action,10,3,PlusBuys,1,PlusMoney,2
+Festival,Base,Action,10,5,PlusActions,2,PlusBuys,1,PlusMoney,2
+Laboratory,Base,Action,10,5,PlusCards,2,PlusActions,1
+Militia,Base,Action,10,4,PlusMoney,2,Attack,1
+Witch,Base,Action,10,5,PlusCards,2,Attack,0
+Council Room,Base,Action,10,5,PlusCards,4,PlusBuys,1,PlusCardsOthers,1
+Chapel,Base,Action,10,2,TrashUpTo,4
+Chancellor,Base,Action,10,3,PlusMoney,2,DeckToDiscard,-1
+Workshop,Base,Action,10,4,GainUpTo,4
+Cellar,Base,Action,10,2,DiscardToDraw,-1
+Bureaucrat,Base,Action,10,4,GainSilverTop,-1,Attack,2
+Starting deck
+Copper,7
+Estate,3
+Turn rules
+Kingdom,Cards,Actions,Buys,Money
+10,5,1,1,0
+Ending condition
+Province,3

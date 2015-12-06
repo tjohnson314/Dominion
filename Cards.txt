@@ -21,11 +21,12 @@ Workshop,Base,Action,10,4,GainUpTo,4
 Cellar,Base,Action,10,2,DiscardToDraw,-1
 Bureaucrat,Base,Action,10,4,GainSilverTop,-1,Attack,2
 Throne Room,Base,Action,10,4,RepeatActionReq,2
+Feast,Base,Action,10,4,GainUpTo,5,TrashThis,-1
 Starting deck
 Copper,7
 Estate,3
 Turn rules
 Kingdom,Cards,Actions,Buys,Money
-10,5,1,1,0
+10,10,1,1,0
 Ending condition
 Province,3

@@ -479,7 +479,13 @@ public class Player
                 
                 ResetChoice();
             }
-
+            
+            else if(next.Command().equals("TrashThis"))
+            {
+                InPlay.remove(card);
+                Trash.add(card);
+                Main.actionSemaphore.release();
+            }
             
             //After a step is completed, we update every player's game window.
             System.out.println("Redraw in PlayAction.");

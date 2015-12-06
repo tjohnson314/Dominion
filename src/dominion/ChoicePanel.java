@@ -65,18 +65,21 @@ public class ChoicePanel extends JPanel
                        }
                        else
                        {
-                           JOptionPane.showMessageDialog(done, "Please choose at most " + toChoose + " cards.");
+                           JOptionPane.showMessageDialog(done, "Please choose at most " + toChoose + " card(s).");
                        }
                    }
                    else
                    {
-                       if(chosen.size() == Main.players.get(playerNum).ToChoose())
+                       System.out.println("In ChoicePanel: cardList.size() = " + cardList.size());
+                       System.out.println("chosen.size() = " + chosen.size());
+                       if(chosen.size() == Main.players.get(playerNum).ToChoose() || chosen.size() == cardList.size())
                        {
-                           
+                           System.out.println("Choice made!");
+                           Main.players.get(playerNum).setChosen(chosen);
                        }
                        else
                        {
-                           JOptionPane.showMessageDialog(done, "Please choose exactly " + toChoose + " cards.");
+                           JOptionPane.showMessageDialog(done, "Please choose exactly " + toChoose + " card(s).");
                        }
                    }                   
                    

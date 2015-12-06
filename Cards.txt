@@ -20,6 +20,7 @@ Chancellor,Base,Action,10,3,PlusMoney,2,DeckToDiscard,-1
 Workshop,Base,Action,10,4,GainUpTo,4
 Cellar,Base,Action,10,2,DiscardToDraw,-1
 Bureaucrat,Base,Action,10,4,GainSilverTop,-1,Attack,2
+Throne Room,Base,Action,10,4,RepeatActionReq,2
 Starting deck
 Copper,7
 Estate,3

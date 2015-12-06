@@ -301,6 +301,8 @@ public class Player
         //After being played, a card is "in play." This is distinct from the discard pile.
         if(phase == actionPhase && card.Type() == Card.ActionType && actions > 0)
         {
+            //Playing the card requires using an action.
+            actions -= 1;
             ActionCard tempCard = (ActionCard)card;
             Hand.remove(cardLoc);
             InPlay.add(card);
@@ -336,8 +338,6 @@ public class Player
      */
     public void PlayAction(ActionCard card)
     {
-        //Playing the card requires using an action.
-        actions -= 1;
         System.out.println(card.Instructions().size());
         
         //We continue with this card until every instruction has been followed as much as possible.
@@ -449,12 +449,42 @@ public class Player
             else if(next.Command().equals("Attack"))
             {
                 final int attackNum = next.Num();
-                Main.players.get(Main.currentPlayer).Attack(attackNum);
+                this.Attack(attackNum);
             }
             
-            else if(next.Command().equals("RepeatReq"))
+            else if(next.Command().equals("RepeatActionReq"))
             {
+                ChooseAction(Hand, 1, false, "Choose an action card to play " + next.Num() + " times.");
                 
+                if(chosen.size() > 0) //We have to make sure we had an action to play
+                {
+                    for(int j = 0; j < Hand.size(); j++)
+                    {
+                        //We search the hand for the card we chose.
+                        if(Hand.get(j).equals(Choice.get(chosen.get(0))))
+                        {
+                            ActionCard nextCard = (ActionCard)Hand.remove(j);
+                            InPlay.add(nextCard);
+
+                            for(int k = 0; k < next.Num(); k++)
+                            {
+                                if(k == 0)
+                                    Main.gameLog += ("playing a(n) " + nextCard.Name() + "\n");
+                                else
+                                    Main.gameLog += ("playing a(n) " + nextCard.Name() + " again\n");
+
+                                PlayAction(nextCard);
+                            }
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("No action card could be chosen.");
+                }
+                
+                ResetChoice();
             }
             
             //After a step is completed, we update every player's game window.
@@ -536,6 +566,42 @@ public class Player
         
         Main.actionSemaphore.release();
     }
+
+    public void ChooseAction(ArrayList<Card> options, int num, boolean fewer, String instr)
+    {
+        try
+        {
+            Main.dataSemaphore.acquire();
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        
+        Choice = new ArrayList<Card>();
+        for(Card c : options)
+        {
+            if(c.Type() == Card.ActionType)
+            {
+                Choice.add(c);
+            }
+        }
+        
+        toChoose = num;
+        chooseFewer = fewer;
+        prompt = instr;
+        
+        Main.dataSemaphore.release();
+        
+        System.out.println("Redraw in ChooseAction.");
+        Main.Redraw(playerNum);
+        
+        choiceMade = false;
+        WaitForChoice();
+        
+        System.out.println("Done choosing action.");
+        Main.actionSemaphore.release();
+    }
     
     public void Trash(int toTrash, boolean fewer)
     {
@@ -548,10 +614,10 @@ public class Player
             System.out.println(e);
         }
         
-        for(int j = 0; j < this.Hand().size(); j++)
+        Choice = new ArrayList<Card>();
+        for(Card c : Hand)
         {
-            Card choiceCard = this.Hand().get(j);
-            this.Choice.add(choiceCard);
+            Choice.add(c);
         }
 
         toChoose = toTrash;
@@ -565,10 +631,37 @@ public class Player
         Main.dataSemaphore.release();
         
         System.out.println("Redraw in Trash.");
-        Main.Redraw(this.playerNum);
+        Main.Redraw(playerNum);
         
-        while((chooseFewer && !choiceMade) || (!chooseFewer && chosen.size() != toChoose))
+        choiceMade = false;
+        WaitForChoice();
+        
+        Collections.sort(chosen, Collections.reverseOrder()); //Why bother sorting them?
+        for(int i = 0; i < chosen.size(); i++)
         {
+            Main.gameLog += "... trashing a(n) " + Choice.get(chosen.get(i)).Name() + "\n";
+            System.out.println(this.Hand.size() + ", " + i);
+            for(int j = 0; j < Hand.size(); j++)
+            {
+                if(Hand.get(j).equals(Choice.get(chosen.get(i))))
+                {
+                    this.TrashCard(chosen.get(i));
+                    break;
+                }
+            }
+        }
+        
+        ResetChoice();
+        
+        System.out.println("Done trashing.");
+        Main.actionSemaphore.release();
+    }
+    
+    public void WaitForChoice()
+    {
+        while(!choiceMade)
+        {
+            System.out.println("Waiting for choice...");
             try
             {
                 Thread.sleep(100);
@@ -578,22 +671,15 @@ public class Player
                 System.out.println(e);
             }
         }
-        
-        Collections.sort(chosen, Collections.reverseOrder());
-        for(int i = 0; i < chosen.size(); i++)
-        {
-            System.out.println(this.Hand.size() + ", " + i);
-            this.TrashCard(chosen.get(i));
-        }
-        
+    }
+    
+    public void ResetChoice()
+    {
         toChoose = -1;
         prompt = "";
         chosen = new ArrayList<Integer>();
         choiceMade = false;
         Choice = new ArrayList<Card>();
-        
-        System.out.println("Done trashing.");
-        Main.actionSemaphore.release();
     }
     
     public void DeckToDiscard()
@@ -920,7 +1006,7 @@ public class Player
             Main.currentPlayer = (Main.currentPlayer + 1)%Main.numPlayers;
             if(Main.currentPlayer == 0)
                 turn++;
-            Main.gameLog += ("\n" + Main.players.get(Main.currentPlayer).Name() + ", Turn " + turn + "\n");
+            Main.gameLog += ("\n" + name + ", Turn " + turn + "\n");
             
             for(int i = 0; i < Main.numPlayers; i++)
                 Main.Redraw(i);

@@ -30,7 +30,6 @@ public abstract class Card
     public static final int AttackDiscard = 1;
     public static final int AttackVictoryOnDeck = 2;
     public static final int AttackHandSize = 3;
-    public static final int DiscardNum = 2;
     
     protected Card(String name, String expansion, int type, int cost, int supply)
     {
@@ -69,6 +68,7 @@ public abstract class Card
 
 class CustomComparator implements Comparator<Card>
 {
+    @Override
     public int compare(Card card1, Card card2)
     {
         if(card1.Type() < card2.Type())

@@ -452,6 +452,11 @@ public class Player
                 Main.players.get(Main.currentPlayer).Attack(attackNum);
             }
             
+            else if(next.Command().equals("RepeatReq"))
+            {
+                
+            }
+            
             //After a step is completed, we update every player's game window.
             System.out.println("Redraw in PlayAction.");
             for(int j = 0; j < Main.numPlayers; j++)
@@ -690,7 +695,6 @@ public class Player
             {
                 final int nextPlayer = (Main.currentPlayer + i)%Main.numPlayers;
                 {
-                    System.out.println("Attack 2");
                     if(!Main.players.get(nextPlayer).VictoryOnDeck())
                     {
                         Main.players.get(nextPlayer).RevealHand();

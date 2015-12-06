@@ -56,12 +56,29 @@ public class ChoicePanel extends JPanel
                            chosen.add(i);
                    }
                    
-                   if(chosen.size() == Main.players.get(playerNum).ToChoose()
-                           || (Main.players.get(playerNum).ChooseFewer() 
-                           && chosen.size() < Main.players.get(playerNum).ToChoose()))
+                   int toChoose = Main.players.get(playerNum).ToChoose();
+                   if(Main.players.get(playerNum).ChooseFewer())
                    {
-                       Main.players.get(playerNum).setChosen(chosen);
+                       if(chosen.size() <= toChoose)
+                       {
+                           Main.players.get(playerNum).setChosen(chosen);
+                       }
+                       else
+                       {
+                           JOptionPane.showMessageDialog(done, "Please choose at most " + toChoose + " cards.");
+                       }
                    }
+                   else
+                   {
+                       if(chosen.size() == Main.players.get(playerNum).ToChoose())
+                       {
+                           
+                       }
+                       else
+                       {
+                           JOptionPane.showMessageDialog(done, "Please choose exactly " + toChoose + " cards.");
+                       }
+                   }                   
                    
                    //System.out.println("Redraw in ChoicePanel.");
                    //Main.Redraw();

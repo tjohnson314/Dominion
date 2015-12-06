@@ -458,25 +458,18 @@ public class Player
                 
                 if(chosen.size() > 0) //We have to make sure we had an action to play
                 {
-                    for(int j = 0; j < Hand.size(); j++)
+                    ActionCard nextCard = (ActionCard)Choice.get(chosen.get(0));
+                    Hand.remove(nextCard);
+                    InPlay.add(nextCard);
+
+                    for(int k = 0; k < next.Num(); k++)
                     {
-                        //We search the hand for the card we chose.
-                        if(Hand.get(j).equals(Choice.get(chosen.get(0))))
-                        {
-                            ActionCard nextCard = (ActionCard)Hand.remove(j);
-                            InPlay.add(nextCard);
+                        if(k == 0)
+                            Main.gameLog += ("playing a(n) " + nextCard.Name() + "\n");
+                        else
+                            Main.gameLog += ("playing a(n) " + nextCard.Name() + " again\n");
 
-                            for(int k = 0; k < next.Num(); k++)
-                            {
-                                if(k == 0)
-                                    Main.gameLog += ("playing a(n) " + nextCard.Name() + "\n");
-                                else
-                                    Main.gameLog += ("playing a(n) " + nextCard.Name() + " again\n");
-
-                                PlayAction(nextCard);
-                            }
-                            break;
-                        }
+                        PlayAction(nextCard);
                     }
                 }
                 else
@@ -486,6 +479,7 @@ public class Player
                 
                 ResetChoice();
             }
+
             
             //After a step is completed, we update every player's game window.
             System.out.println("Redraw in PlayAction.");
